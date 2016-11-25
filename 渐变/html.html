@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        #box {
+            width:300px;
+            height:200px;
+            border:1px solid #000;
+            overflow: hidden;
+            position:relative;
+        }
+        #box ul{
+            width: 300px;
+            height:100%;
+            position: relative;
+        }
+        #box ul li {
+            width:300px;
+            height:200px;
+            position: absolute;
+            left: 0;
+            top:0;
+            opacity: 0;
+            filter: alpha(opacity:0);
+        }
+        .barBox{
+            width:100%;
+            height:50px;
+            position: absolute;
+            left:0;
+            bottom:0;
+        }
+        .barBox span{
+            float: left;
+            width:33.33333%;
+            height:100%;
+            background: rgba(0, 0, 0, 0.7);
+            line-height:50px;
+            text-align: center;
+            color: #fff
+        }
+
+        .barBox .hover{
+            background: rgba(120,120,120,0.7);
+        }
+        .barBox span.active{
+            background: rgba(199, 120, 10,1);
+            color: #fff;
+            height:60px;
+            margin-top:-10px;
+            line-height:60PX;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <ul>
+            <li style="background: blue; opacity: 1;">111</li>
+            <li style="background: red;">222</li>
+            <li style="background: yellow;">333</li>
+            <li style="background: pink;">444</li>
+            <li style="background: green;">555</li>
+        </ul>
+        <div class="barBox">
+            <span class="active">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+        </div>
+    </div>
+    <script src="jquery.js"></script>
+    <script>
+        let timer,
+            t = 0,
+            len = $('#box ul li').length,
+            scale = 100 / len + '%';
+
+        $('#box div span').css('width',scale);
+
+        function tab() {
+            t++;
+            if (t == len) {
+                t = 0;
+            }
+            $('#box div span').eq(t).addClass('active').siblings().removeClass('active');
+            $('#box ul li').eq(t).animate({opacity: 1}).siblings().animate({opacity: 0});
+
+        }
+
+        timer = setInterval(function () {
+            tab();
+        }, 1000);
+
+        $('#box div span').each(function(i,ele){
+            $(this).mouseover(function(){
+                if($(this).index()!=t){
+                    $('.barBox span').eq(i).addClass('hover');
+                }
+                ele.timer=setTimeout(function(){
+                    t = i;
+                    $('#box div span').eq(t).addClass('active').siblings().removeClass('active');
+                    $('#box ul li').eq(t).animate({opacity: 1}).siblings().animate({opacity: 0});
+                },700) ;
+
+            });
+            $(this).mouseout(function(){
+                $(this).removeClass('hover');
+                clearTimeout(ele.timer);
+            });
+        });
+
+        $('#box').mouseover(function(){
+            clearInterval(timer);
+        }).mouseout(function(){
+            timer = setInterval(function(){
+                tab();
+            },1000);
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        ul li{
+            list-style:none;
+        }
+        .box{
+            width:500px;
+            height:500px;
+            position:relative;
+            margin:0 auto;
+            border:1px solid #ccc;
+            overflow:hidden;
+        }
+        .box div{
+            position:absolute;left:50%;margin-left:-100px;
+        }
+        .box div{
+            width:200px;
+            height:30px;
+        }
+        .box div span{
+            float:left;
+            width:30px;
+            height:30px;
+            background:#999;
+            border-radius:50%;
+            line-height:30px;
+            text-align:center;
+            margin:0 10px;
+        }
+        ul{
+            margin-top:40px;
+            width:1500px;
+            position:absolute;left:0;top:0;
+        }
+        ul li{
+            float:left;
+            width:500px;
+            height:400px;
+            background:black;
+            color: #fff4c2;
+        }
+
+        .box div .active{
+            background: orange;
+        }
+        #prev{
+            position: absolute;
+            left:0;top:50%;
+        }
+        #next{
+            position: absolute;
+            right: 0;
+            top: 50%;
+        }
+    </style>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<div class="box">
+    <div>
+        <span class="active">1</span>
+        <span>2</span>
+        <span>3</span>
+    </div>
+    <ul>
+        <li>111</li>
+        <li style="background:red;">222</li>
+        <li style="background:blue;">333</li>
+    </ul>
+    <input type="button" value="<" id="prev">
+    <input type="button" value=">" id="next">
+</div>
+<script>
+    $(document).ready(function(){
+        let timer,
+            t=0,
+            len = $('.box ul li').length,
+            tab = () => {
+                $('.box div span').eq(t).addClass('active').siblings().removeClass('active');
+                $('ul').animate({left: -(500 * t)});
+            };
+
+        $('.box').mouseover(function(){
+            clearInterval(timer);
+        });
+
+        $('.box').mouseout(function(){
+            timer=setInterval(function(){
+                t++;
+                if (t == len) t = 0;
+                tab();
+            },1000);
+        });
+
+        timer=setInterval(function(){
+            t++;
+            if(t==len) t=0;
+            tab();
+        },1000);
+
+        $('.box div span').each(function (index, element) {
+            $(element).click(function () {
+                clearInterval(timer);
+                t = index;
+                $(this).addClass('active').siblings().removeClass('active');
+                $('ul').animate({left: -(500 * t)});
+            });
+        });
+
+        $('#prev').on('click',function(){
+            t--;
+            if(t<0) t=len-1;
+            tab();
+        });
+
+        $('#next').on('click',function(){
+            t++;
+            if(t==len) t=0;
+            tab();
+        });
+    });
+</script>
+</body>
+</html>
